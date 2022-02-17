@@ -1,0 +1,26 @@
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check for .git directory
+        run: |
+          ls -ld .git
+
+      - name: Build image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          tags: example:latest
+          push: false
+
+      - name: List image files
+        run: |
+          docker run --rm example:latest find /usr/src/app
